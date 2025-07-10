@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import connectDB from "./lib/connectDB.js"
 import AdminAuth from "./routes/admin.auth.js"
+import StudentRouter from "./routes/student.route.js"
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cors());
 connectDB();
 
 app.use("/", AdminAuth);
+app.use("/student", StudentRouter);
 
 app.listen(process.env.PORT, () => {
     console.log(`\nServer is running on http://localhost:${process.env.PORT}\n`);

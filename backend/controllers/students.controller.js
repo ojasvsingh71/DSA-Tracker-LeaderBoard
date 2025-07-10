@@ -70,6 +70,7 @@ const addStudent = async (req, res) => {
         });
 
     } catch (err) {
+        console.error("Error in addStudent:", err);
         res.status(500).json({
             message: "Server error",
             err

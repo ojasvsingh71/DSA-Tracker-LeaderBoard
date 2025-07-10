@@ -33,7 +33,8 @@ const studentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Group"
     }],
-    platforms: [platformEntrySchema]
+    platforms: [platformEntrySchema],
+    lastSynced: { type: Date, default: null }
 }, { timestamps: true });
 
 export default mongoose.model("Student", studentSchema);

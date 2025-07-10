@@ -73,4 +73,13 @@ const login = async (req, res) => {
     }
 };
 
-export { login, register };
+const getGroupsByAdmin = async (req, res) => {
+    try {
+        const groups = await groupModel.find({ admin: req.adminId }).populate("students");
+        res.json({ groups });
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch groups", err });
+    }
+};
+
+export { login, register, getGroupsByAdmin };

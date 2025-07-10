@@ -1,12 +1,13 @@
-import { addStudent, getstudents, deletestudent, syncStudent } from "../controllers/students.controller.js"
+import { addStudent, getstudent, deletestudent, syncStudent, editstudent } from "../controllers/students.controller.js"
 import express from "express"
 import isAdmin from "../middlewares/admin.middleware.js";
 
 const router = express.Router();
 
 router.post("/:id/add", isAdmin, addStudent);
-router.get("/:id/get", getstudents);
-router.post("/id/delete", isAdmin, deletestudent);
-router.post("/:id/sync", syncStudent);
+router.get("/:id/get", isAdmin, getstudent);
+router.delete("/:id/delete", isAdmin, deletestudent);
+router.post("/:id/sync",isAdmin, syncStudent);
+router.patch("/:id/edit", isAdmin, editstudent);
 
 export default router;

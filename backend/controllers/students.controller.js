@@ -5,121 +5,171 @@ import groupModel from "../models/group.model.js";
 const addStudent = async (req, res) => {
     try {
         const groupId = req.params.id;
-        const { username, platforms, language } = req.body;
+        const { name, platforms } = req.body;
 
         const group = await groupModel.findById(groupId);
         if (!group) {
-            return res.status(404).json({
-                message: "Group not found"
+            return res.status(404).json({ 
+                message: "Group not found" 
             });
         }
 
-        const existing = await studentModel.findOne({ username });
+        let student = await studentModel.findOne({ name });
 
-        if (existing) {
-            return res.status(400).json({
-                message: " Student already exists!!!"
-            })
+        if (student) {
+            if (!student.group.includes(groupId)) {
+                student.group.push(groupId);
+                await student.save();
+            }
+
+            if (!group.students.includes(student._id)) {
+                group.students.push(student._id);
+                await group.save();
+            }
+
+            return res.status(200).json({
+                message: "Student already existed. Added to new group.",
+                student
+            });
         }
 
-        const stats = await fetchLeetCodeStats(username);
+        const updatedPlatforms = [];
 
-        const student = await studentModel.create({
-            username,
-            platforms,
-            language,
-            group: groupId,
-            stats: {
-                ...stats,
-                fetchedAt: new Date()
+        for (let entry of platforms) {
+            const { platform, handle, language } = entry;
+            let stats = {};
+
+            if (platform === "leetcode") {
+                stats = await fetchLeetCodeStats(handle);
             }
+
+            updatedPlatforms.push({
+                platform,
+                handle,
+                language,
+                stats: {
+                    ...stats,
+                    fetchedAt: new Date()
+                }
+            });
+        }
+
+        student = await studentModel.create({
+            name,
+            platforms: updatedPlatforms,
+            lastSynced: new Date(),
+            group: [groupId]
         });
 
-        student.group.push(groupId);
-        await student.save();
-
-          group.students.push(student._id);
+        group.students.push(student._id);
         await group.save();
 
-        return res.status(201).json(student);
-    } catch (err) {
-        res.status(500).json({
-            message: "Sever error!!!",
-            err
-        })
-    }
-}
+        return res.status(201).json({
+            message: "New student created and added to group",
+            student
+        });
 
-const getstudents = async (req, res) => {
-    try {
-        const students = await studentModel.find().lean();
-        return res.json(students);
     } catch (err) {
         res.status(500).json({
-            message: "Sever error!!!",
+            message: "Server error",
             err
-        })
+        });
     }
-}
+};
+
+const getstudent = async (req, res) => {
+    try {
+        const studentId = req.params.id;
+
+        const student = await studentModel.findById(studentId);
+        return res.json(student);
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error",
+            err
+        });
+    }
+};
+
+const editstudent = async (req, res) => {
+    try {
+        const studentId = req.params.id;
+        const { name, platforms } = req.body;
+
+        const student = await studentModel.findById(studentId);
+        if (!student) {
+            return res.status(404).json({
+                message: "Student not found"
+            });
+        }
+
+        student.name = name || student.name;
+        student.platforms = platforms || student.platforms;
+        await student.save();
+
+        return res.json({
+            message: "Student updated successfully",
+            student
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error",
+            err
+        });
+    }
+};
 
 const deletestudent = async (req, res) => {
     try {
         await studentModel.findByIdAndDelete(req.params.id);
-        await statsModel.deleteMany({ student: req.params.id });
         return res.sendStatus(204);
     } catch (err) {
         res.status(500).json({
-            message: "Sever error!!!",
+            message: "Server error",
             err
-        })
+        });
     }
-}
+};
 
 const syncStudent = async (req, res) => {
     try {
         const student = await studentModel.findById(req.params.id);
-        console.log("Looking for student:", req.params.id);
-
         if (!student) {
             return res.status(404).json({
-                message: "Student not found!!!"
-            })
-        }
-
-        // if (student.platforms !== "leetcode") {
-        //     return res.status(400).json({
-        //         message: "Platform not supported yet"
-        //     })
-        // }
-
-        const stats = await fetchLeetCodeStats(student.username);
-        if (!stats) {
-            return res.status(500).json({
-                message: "Failed to fetch stats"
+                message: "Student not found!"
             });
         }
 
-        await statsModel.findOneAndUpdate(
-            { username: student.username },
-            { totalSolved: stats.totalSolved },
-            { currentStreak: stats.currentStreak },
-            { student: student._id },
-            { ...stats, fetchedAt: new Date() },
-            { upsert: true, new: true }
-        );
+        const updatedPlatforms = [];
 
+        for (let entry of student.platforms) {
+            let stats = {};
+            if (entry.platform === "leetcode") {
+                stats = await fetchLeetCodeStats(entry.handle);
+            }
+
+            updatedPlatforms.push({
+                ...entry,
+                stats: {
+                    ...stats,
+                    fetchedAt: new Date()
+                }
+            });
+        }
+
+        student.platforms = updatedPlatforms;
         student.lastSynced = new Date();
         await student.save();
 
         return res.json({
-            message: "Stats synced successfully", stats
+            message: "Stats synced successfully",
+            student
         });
     } catch (err) {
         res.status(500).json({
-            message: "Sever error!!!",
-            err
-        })
+            message: "Server error", err
+        });
     }
-}
+};
 
-export { addStudent, getstudents, deletestudent, syncStudent };
+export { addStudent, getstudent, deletestudent, syncStudent, editstudent };

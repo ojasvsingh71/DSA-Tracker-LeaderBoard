@@ -5,6 +5,7 @@ import connectDB from "./lib/connectDB.js"
 import AdminAuth from "./routes/admin.auth.js"
 import StudentRouter from "./routes/student.route.js"
 import GroupRouter from "./routes/group.route.js"
+import "./cron/syncStudents.cron.js"
 
 const app = express();
 

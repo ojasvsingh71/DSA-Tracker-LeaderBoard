@@ -55,7 +55,7 @@ const login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user._id, email: user.email },
+            { adminId: user._id },
             process.env.JWT_SECRET,
             { expiresIn: "5h" }
         );
@@ -64,7 +64,7 @@ const login = async (req, res) => {
             message: "User found!!!",
             token,
             user: {
-                id: user._id,
+                adminId: user._id,
                 name: user.name,
                 email: user.email
             }

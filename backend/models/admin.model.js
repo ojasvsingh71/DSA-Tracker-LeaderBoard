@@ -13,7 +13,10 @@ const admin = mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    group: [{
+        type: String
+    }]
 })
 
-export default mongoose.model("AdminModel", admin);
+export default mongoose.model("Admin", admin);

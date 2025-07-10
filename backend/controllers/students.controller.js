@@ -1,10 +1,18 @@
-import statsModel from "../models/stats.model.js";
 import studentModel from "../models/student.model.js";
 import fetchLeetCodeStats from "../services/leetcode.service.js";
+import groupModel from "../models/group.model.js";
 
 const addStudent = async (req, res) => {
     try {
+        const groupId = req.params.id;
         const { username, platforms, language } = req.body;
+
+        const group = await groupModel.findById(groupId);
+        if (!group) {
+            return res.status(404).json({
+                message: "Group not found"
+            });
+        }
 
         const existing = await studentModel.findOne({ username });
 
@@ -13,18 +21,25 @@ const addStudent = async (req, res) => {
                 message: " Student already exists!!!"
             })
         }
+
+        const stats = await fetchLeetCodeStats(username);
+
         const student = await studentModel.create({
             username,
             platforms,
-            language
+            language,
+            group: groupId,
+            stats: {
+                ...stats,
+                fetchedAt: new Date()
+            }
         });
 
-        const stats = await fetchLeetCodeStats(student.username);
-        await statsModel.findOneAndUpdate(
-            { username, },
-            { ...stats, fetchedAt: new Date() },
-            { upsert: true, new: true }
-        );
+        student.group.push(groupId);
+        await student.save();
+
+          group.students.push(student._id);
+        await group.save();
 
         return res.status(201).json(student);
     } catch (err) {

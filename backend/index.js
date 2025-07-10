@@ -4,6 +4,7 @@ import cors from "cors"
 import connectDB from "./lib/connectDB.js"
 import AdminAuth from "./routes/admin.auth.js"
 import StudentRouter from "./routes/student.route.js"
+import GroupRouter from "./routes/group.route.js"
 
 const app = express();
 
@@ -14,8 +15,9 @@ app.use(cors());
 
 connectDB();
 
-app.use("/", AdminAuth);
+app.use("/auth/admin", AdminAuth);
 app.use("/student", StudentRouter);
+app.use("/group", GroupRouter);
 
 app.listen(process.env.PORT, () => {
     console.log(`\nServer is running on http://localhost:${process.env.PORT}\n`);

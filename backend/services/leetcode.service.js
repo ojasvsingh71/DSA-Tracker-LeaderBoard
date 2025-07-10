@@ -38,19 +38,16 @@ const fetchLeetCodeStats = async (username) => {
         const user = res.data.data.matchedUser;
         if (!user) return null;
 
-        // Get total solved from "All" (may include duplicates)
         const totalSolvedEstimate = user.submitStats.acSubmissionNum.find(
             (item) => item.difficulty === "All"
         )?.count || 0;
 
-        // Determine max difficulty
         let maxDifficulty = "Easy";
         for (const { difficulty, count } of user.submitStats.acSubmissionNum) {
             if (difficulty === "Hard" && count > 0) maxDifficulty = "Hard";
             else if (difficulty === "Medium" && count > 0 && maxDifficulty !== "Hard") maxDifficulty = "Medium";
         }
 
-        // Calculate streak
         const calendar = user.userCalendar.submissionCalendar;
         const timestamps = Object.keys(JSON.parse(calendar)).map(t => parseInt(t) * 1000);
         timestamps.sort((a, b) => b - a);
@@ -69,7 +66,6 @@ const fetchLeetCodeStats = async (username) => {
             }
         }
 
-        // ✅ Return clean stats
         return {
             totalSolved: totalSolvedEstimate,
             currentStreak: streak,

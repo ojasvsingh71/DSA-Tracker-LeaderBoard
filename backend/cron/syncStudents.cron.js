@@ -2,7 +2,7 @@ import cron from "node-cron";
 import studentModel from "../models/student.model.js";
 import fetchLeetCodeStats from "../services/leetcode.service.js";
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("0 */2 * * *", async () => {
     console.log(" Auto Sync Started: LeetCode stats");
 
     try {

@@ -36,6 +36,7 @@ const getGroup = async (req, res) => {
             const leetCodeData = student.platforms.find(p => p.platform === "leetcode");
 
             return {
+                id: student._id,
                 name: student.name,
                 leetcodeHandle: leetCodeData?.handle || "N/A",
                 language: leetCodeData?.language || "N/A",

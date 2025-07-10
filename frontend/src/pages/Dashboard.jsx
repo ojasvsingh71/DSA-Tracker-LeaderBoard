@@ -37,7 +37,6 @@ const Dashboard = () => {
         Admin Dashboard
       </h1>
 
-      {/* Create Group */}
       <form onSubmit={handleCreate} className="flex gap-2 mb-6">
         <input
           type="text"
@@ -55,7 +54,6 @@ const Dashboard = () => {
         </button>
       </form>
 
-      {/* Group List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {groups.length === 0 ? (
           <p className="text-gray-600 dark:text-gray-300">No groups created yet.</p>

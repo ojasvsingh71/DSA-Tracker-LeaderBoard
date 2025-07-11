@@ -1,6 +1,7 @@
 import adminModel from "../models/admin.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import groupModel from "../models/group.model.js";
 
 const register = async (req, res) => {
     try {
@@ -78,6 +79,7 @@ const getGroupsByAdmin = async (req, res) => {
         const groups = await groupModel.find({ admin: req.adminId }).populate("students");
         res.json({ groups });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Failed to fetch groups", err });
     }
 };

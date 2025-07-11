@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axiosInstance";
 
 const Dashboard = () => {
+  const {id} = useParams();
   const [groups, setGroups] = useState([]);
   const [name, setName] = useState("");
   const navigate = useNavigate();
 
   const fetchGroups = async () => {
     try {
-      const res = await api.get("/admin/groups"); 
+      const res = await api.get(`auth/admin/${id}/groups`);
       setGroups(res.data.groups || []);
     } catch (err) {
       console.error("Failed to fetch groups", err);
@@ -19,7 +20,7 @@ const Dashboard = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/group/add", { name });
+      const res = await api.post("/group/add", { id, name });
       setGroups([...groups, res.data.group]);
       setName("");
     } catch (err) {

@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
-router.get("/groups", isAdmin, getGroupsByAdmin);
+router.get("/:id/groups", isAdmin, getGroupsByAdmin);
 
 export default router;

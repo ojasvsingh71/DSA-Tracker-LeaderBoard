@@ -1,4 +1,5 @@
 import groupModel from "../models/group.model.js";
+import adminModel from "../models/admin.model.js";
 
 const addGroup = async (req, res) => {
     const { name } = req.body;
@@ -9,6 +10,10 @@ const addGroup = async (req, res) => {
             admin: req.adminId,
             students: []
         });
+
+        const admin = await adminModel.findById(req.adminId);
+        admin.group.push(newGroup._id);
+        await admin.save();
 
         res.status(201).json({
             message: "Group created successfully!!!",

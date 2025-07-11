@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axiosInstance";
-import { FaSyncAlt, FaTrash } from "react-icons/fa";
+import { FaSyncAlt, FaTrash, FaEdit, FaSave, FaTimes } from "react-icons/fa";
+import { Edit3, Trash2, Save, X, RefreshCw, PlusCircle } from "lucide-react";
 
 const GroupDetails = () => {
     const { id } = useParams();
     const [group, setGroup] = useState(null);
     const [newStudent, setNewStudent] = useState({ name: "", platform: "leetcode", handle: "", language: "" });
     const [loading, setLoading] = useState(false);
+    const [editingId, setEditingId] = useState(null);
+    const [editData, setEditData] = useState({});
 
     const fetchGroup = async () => {
         try {
@@ -58,6 +61,38 @@ const GroupDetails = () => {
         }
     };
 
+    const handleEdit = (student) => {
+        setEditingId(student.id);
+        setEditData({
+            name: student.name,
+            handle: student.leetcodeHandle,
+            language: student.language,
+        });
+    };
+
+    const handleCancel = () => {
+        setEditingId(null);
+        setEditData({});
+    };
+
+    const handleSave = async (studentId) => {
+        try {
+            await api.patch(`/student/${studentId}/edit`, {
+                name: editData.name,
+                platforms: [{
+                    platform: "leetcode",
+                    handle: editData.handle,
+                    language: editData.language,
+                }]
+            });
+            setEditingId(null);
+            handleSync(studentId);
+            fetchGroup();
+        } catch (err) {
+            console.error("Update failed", err);
+        }
+    };
+
     useEffect(() => {
         fetchGroup();
     }, [id]);
@@ -65,7 +100,7 @@ const GroupDetails = () => {
     if (!group) return <div className="p-6 text-center text-gray-600 dark:text-gray-300">Loading...</div>;
 
     return (
-        <div className="p-6 max-w-6xl mx-auto">
+        <div className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-50 dark:from-gray-900 dark:to-gray-800 p-6">
             <h1 className="text-4xl font-extrabold mb-6 text-gray-900 dark:text-white">
                 Group: {group.groupName}
             </h1>
@@ -79,11 +114,7 @@ const GroupDetails = () => {
                 🌐 View Public Leaderboard ↗
             </a>
 
-            {/* Add Student Form */}
-            <form
-                onSubmit={handleAddStudent}
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8"
-            >
+            <form onSubmit={handleAddStudent} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <input
                     type="text"
                     placeholder="Name"
@@ -106,8 +137,6 @@ const GroupDetails = () => {
                     className="px-3 py-2 rounded border dark:border-gray-600 dark:bg-gray-800 dark:text-white"
                 >
                     <option value="leetcode">LeetCode</option>
-                    <option value="codeforces">Codeforces</option>
-                    <option value="codechef">CodeChef</option>
                 </select>
                 <input
                     type="text"
@@ -125,13 +154,11 @@ const GroupDetails = () => {
                 </button>
             </form>
 
-            {/* Leaderboard Table */}
-            <div className="overflow-x-auto rounded-md border dark:border-gray-700 shadow">
-                <table className="w-full text-sm text-left border-collapse">
-                    <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+            <div className="overflow-x-auto rounded-xl shadow-lg border dark:border-gray-700">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead className="bg-blue-50 dark:bg-gray-900 sticky top-0 z-10">
                         <tr className="uppercase text-xs text-center">
                             <th className="p-3">Name</th>
-                            <th className="p-3">Platform</th>
                             <th className="p-3">Handle</th>
                             <th className="p-3">Language</th>
                             <th className="p-3">Solved</th>
@@ -145,40 +172,84 @@ const GroupDetails = () => {
                             <tr
                                 key={idx}
                                 className="border-t dark:border-gray-700 even:bg-white odd:bg-gray-50 
-                 dark:even:bg-[#1e1e2f] dark:odd:bg-[#2a2a40] 
-                 hover:bg-indigo-50 dark:hover:bg-[#3b3b5c] transition-colors"
+                  dark:even:bg-[#1e1e2f] dark:odd:bg-[#2a2a40] 
+                  hover:bg-indigo-50 dark:hover:bg-[#3b3b5c] transition-colors"
                             >
-                                <td className="p-3 font-medium">{student.name}</td>
-                                <td className="p-3 capitalize">Leetcode</td>
-                                <td className="p-3 font-semibold text-indigo-600 dark:text-indigo-400">{student.leetcodeHandle || "N/A"}</td>
-                                <td className="p-3">{student.language}</td>
+                                <td className="p-3 font-medium">
+                                    {editingId === student.id ? (
+                                        <input
+                                            type="text"
+                                            value={editData.name}
+                                            onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                                            className="w-full bg-transparent border-b border-gray-300 dark:border-gray-600"
+                                        />
+                                    ) : (
+                                        student.name
+                                    )}
+                                </td>
+                                <td className="p-3 font-semibold text-indigo-600 dark:text-indigo-400">
+                                    {
+                                        student.leetcodeHandle || "N/A"
+                                    }
+                                </td>
+                                <td className="p-3">
+                                    {
+                                        student.language
+                                    }
+                                </td>
                                 <td className="p-3">{student.totalSolved}</td>
                                 <td className="p-3">{student.currentStreak}</td>
-                                <td
-                                    className={`p-3 font-bold ${student.maxDifficulty === "Hard"
-                                            ? "text-red-600"
-                                            : student.maxDifficulty === "Medium"
-                                                ? "text-yellow-500"
-                                                : "text-green-600"
-                                        }`}
-                                >
+                                <td className={`p-3 font-bold ${student.maxDifficulty === "Hard"
+                                    ? "text-red-600"
+                                    : student.maxDifficulty === "Medium"
+                                        ? "text-yellow-500"
+                                        : "text-green-600"
+                                    }`}>
                                     {student.maxDifficulty}
                                 </td>
-                                <td className="p-3 space-x-3">
-                                    <button
-                                        onClick={() => handleSync(student.id)}
-                                        className="text-blue-600 dark:text-blue-400 hover:underline"
-                                        title="Sync Data"
-                                    >
-                                        <FaSyncAlt />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(student.id)}
-                                        className="text-red-600 dark:text-red-400 hover:underline"
-                                        title="Delete Student"
-                                    >
-                                        <FaTrash />
-                                    </button>
+                                <td className="p-3 flex items-center justify-center gap-3">
+                                    {editingId === student.id ? (
+                                        <>
+                                            <button
+                                                onClick={() => handleSave(student.id)}
+                                                className="text-green-600 hover:underline"
+                                                title="Save"
+                                            >
+                                                <FaSave />
+                                            </button>
+                                            <button
+                                                onClick={handleCancel}
+                                                className="text-gray-600 dark:text-gray-300 hover:underline"
+                                                title="Cancel"
+                                            >
+                                                <FaTimes />
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <button
+                                                onClick={() => handleEdit(student)}
+                                                className="text-yellow-500 hover:underline"
+                                                title="Edit"
+                                            >
+                                                <FaEdit />
+                                            </button>
+                                            <button
+                                                onClick={() => handleSync(student.id)}
+                                                className="text-blue-600 dark:text-blue-400 hover:underline"
+                                                title="Sync Data"
+                                            >
+                                                <FaSyncAlt />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(student.id)}
+                                                className="text-red-600 dark:text-red-400 hover:underline"
+                                                title="Delete Student"
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                        </>
+                                    )}
                                 </td>
                             </tr>
                         ))}

@@ -17,7 +17,7 @@ const Login = () => {
     try {
       const res = await api.post("/auth/admin/login", { email, password });
       login(res.data.user, res.data.token);
-      navigate("/dashboard");
+      navigate(`/${res.data.user._id}/dashboard`);
     } catch (err) {
       setErrMsg(err.response?.data?.message || "Login failed");
     }

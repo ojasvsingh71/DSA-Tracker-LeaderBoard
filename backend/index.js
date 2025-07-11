@@ -13,8 +13,11 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cors({
-  origin: ["http://localhost:5173",process.env.frontend_url],
-  credentials: true, 
+  origin: [
+    "http://localhost:5173",
+    process.env.FRONTEND_URL || "https://dsa-tracker-leaderboard.vercel.app"
+  ],
+  credentials: true
 }));
 
 connectDB();

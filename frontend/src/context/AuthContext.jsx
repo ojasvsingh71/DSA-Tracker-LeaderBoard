@@ -1,30 +1,38 @@
 import { createContext, useState, useEffect } from "react";
+import api from "../api/axiosInstance.js";
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const login = (userData, token) => {
-        setUser(userData);
-        localStorage.setItem("token", token);
-    };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      api.get("/auth/me")
+        .then(res => setUser(res.data))
+        .catch(() => { localStorage.clear(); })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem("token");
-    };
+  const login = async (email, password) => {
+    const { data } = await api.post("/auth/admin/login", { email, password });
+    localStorage.setItem("token", data.token);
+    setUser(data.user);
+  };
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            setUser({ token });
-        }
-    }, []);
+  const logout = () => {
+    localStorage.clear();
+    setUser(null);
+  };
 
-    return (
-        <AuthContext.Provider value={{ user, login, logout }}>
-            {children}
-        </AuthContext.Provider>
-    );
-};
+  return (
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}

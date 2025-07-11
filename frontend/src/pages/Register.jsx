@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axiosInstance";
 
 const Register = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -14,12 +15,15 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       await api.post("/auth/admin/register", form);
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,19 +73,47 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full py-2 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 transition"
+            disabled={loading}
+            className="w-full py-2 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 transition disabled:opacity-60"
           >
-            🚀 Register
+            {loading ? (
+              <div className="flex items-center justify-center gap-2">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8z"
+                  />
+                </svg>
+                Creating account...
+              </div>
+            ) : (
+              <>🚀 Register</>
+            )}
           </button>
         </form>
+
         <p className="text-center text-sm text-gray-600 dark:text-gray-400">
           👋 Already have an account?{" "}
-          <a
-            href="/login"
+          <Link
+            to="/"
             className="text-indigo-600 hover:underline dark:text-indigo-400 font-semibold"
           >
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axiosInstance";
 
 const Dashboard = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const [groups, setGroups] = useState([]);
   const [name, setName] = useState("");
   const navigate = useNavigate();
@@ -33,41 +33,44 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-indigo-100 dark:from-gray-950 dark:to-slate-800 p-6">
+      <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-900 dark:text-white tracking-tight">
         Admin Dashboard
       </h1>
 
-      <form onSubmit={handleCreate} className="flex gap-2 mb-6">
+      <form onSubmit={handleCreate} className="flex flex-col sm:flex-row items-center gap-4 mb-8 max-w-xl mx-auto">
         <input
           type="text"
-          placeholder="New Group Name"
+          placeholder="Enter group name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          className="flex-1 px-4 py-2 rounded border dark:bg-gray-700 dark:text-white"
+          className="flex-1 px-4 py-2 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
         />
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="px-5 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition font-medium"
         >
-          Create Group
+          ➕ Create Group
         </button>
       </form>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {groups.length === 0 ? (
-          <p className="text-gray-600 dark:text-gray-300">No groups created yet.</p>
+          <div className="col-span-full text-center text-gray-500 dark:text-gray-400 mt-6">
+            🚫 No groups created yet. Start by creating your first group!
+          </div>
         ) : (
           groups.map((group) => (
             <div
               key={group._id}
-              className="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-md cursor-pointer transition"
               onClick={() => navigate(`/group/${group._id}`)}
+              className="bg-white dark:bg-[#1e1e2f] p-5 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">{group.name}</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-300">
-                {group.students?.length || 0} students
+              <h2 className="text-xl font-semibold text-indigo-700 dark:text-indigo-400">{group.name}</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                👥 {group.students?.length || 0} student{group.students?.length === 1 ? "" : "s"}
               </p>
             </div>
           ))

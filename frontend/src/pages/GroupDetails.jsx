@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axiosInstance";
-import { FaSyncAlt, FaTrash, FaEdit, FaSave, FaTimes } from "react-icons/fa";
 import { Edit3, Trash2, Save, X, RefreshCw, PlusCircle } from "lucide-react";
 
 const GroupDetails = () => {
@@ -106,7 +105,7 @@ const GroupDetails = () => {
             </h1>
 
             <a
-                href={`/public/leaderboard/${id}`}
+                href={`/leaderboard/${id}`}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-block mb-6 text-blue-600 dark:text-blue-400 hover:underline"
@@ -150,13 +149,17 @@ const GroupDetails = () => {
                     className="col-span-full bg-green-600 text-white py-2 rounded hover:bg-green-700 disabled:opacity-60 transition"
                     disabled={loading}
                 >
-                    {loading ? "Adding..." : "➕ Add Student"}
+                    {loading ? "Adding..." : (
+                        <>
+                            <PlusCircle className="w-4 h-4 inline mr-2" /> Add Student
+                        </>
+                    )}
                 </button>
             </form>
 
             <div className="overflow-x-auto rounded-xl shadow-lg border dark:border-gray-700">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead className="bg-blue-50 dark:bg-gray-900 sticky top-0 z-10">
+                    <thead className="bg-blue-50 text-white dark:bg-gray-900 sticky top-0 z-10">
                         <tr className="uppercase text-xs text-center">
                             <th className="p-3">Name</th>
                             <th className="p-3">Handle</th>
@@ -215,14 +218,16 @@ const GroupDetails = () => {
                                                 className="text-green-600 hover:underline"
                                                 title="Save"
                                             >
-                                                <FaSave />
+                                                <Save className="w-4 h-4" />
+
                                             </button>
                                             <button
                                                 onClick={handleCancel}
                                                 className="text-gray-600 dark:text-gray-300 hover:underline"
                                                 title="Cancel"
                                             >
-                                                <FaTimes />
+                                                <X className="w-4 h-4" />
+
                                             </button>
                                         </>
                                     ) : (
@@ -232,21 +237,24 @@ const GroupDetails = () => {
                                                 className="text-yellow-500 hover:underline"
                                                 title="Edit"
                                             >
-                                                <FaEdit />
+                                                <Edit3 className="w-4 h-4" />
+
                                             </button>
                                             <button
                                                 onClick={() => handleSync(student.id)}
                                                 className="text-blue-600 dark:text-blue-400 hover:underline"
                                                 title="Sync Data"
                                             >
-                                                <FaSyncAlt />
+                                                <RefreshCw className="w-4 h-4" />
+
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(student.id)}
                                                 className="text-red-600 dark:text-red-400 hover:underline"
                                                 title="Delete Student"
                                             >
-                                                <FaTrash />
+                                                <Trash2 className="w-4 h-4" />
+
                                             </button>
                                         </>
                                     )}

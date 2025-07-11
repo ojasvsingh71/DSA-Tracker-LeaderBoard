@@ -15,7 +15,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/:id/dashboard" element={<Dashboard />} />
           <Route path="/group/:id" element={<GroupDetails />} />
-          <Route path="/public/leaderboard/:id" element={<PublicLeaderboard />} />
+          <Route path="/leaderboard/:id" element={<PublicLeaderboard />} />
         </Routes>
       </Router>
     </AuthProvider>

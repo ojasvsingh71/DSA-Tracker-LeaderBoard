@@ -84,4 +84,17 @@ const getGroupsByAdmin = async (req, res) => {
     }
 };
 
-export { login, register, getGroupsByAdmin };
+const getAdmin = async (req, res) => {
+  try {
+    const admin = await adminModel.findById(req.adminId).select("-password");
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+    res.json(admin);
+  } catch (err) {
+    console.error("Get Admin Error:", err);
+    res.status(500).json({ message: "Could not fetch Admin" });
+  }
+};
+
+export { login, register, getGroupsByAdmin, getAdmin };

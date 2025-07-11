@@ -3,36 +3,38 @@ import api from "../api/axiosInstance.js";
 
 export const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const login = (userData, token) => {
+    localStorage.setItem("token", token);
+    setUser(userData);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      api.get("/auth/me")
+      api.get("/auth/admin/getadmin")
         .then(res => setUser(res.data))
-        .catch(() => { localStorage.clear(); })
+        .catch(() => {
+          localStorage.clear();
+          setUser(null);
+        })
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
   }, []);
 
-  const login = async (email, password) => {
-    const { data } = await api.post("/auth/admin/login", { email, password });
-    localStorage.setItem("token", data.token);
-    setUser(data.user);
-  };
-
-  const logout = () => {
-    localStorage.clear();
-    setUser(null);
-  };
-
   return (
     <AuthContext.Provider value={{ user, login, logout, loading }}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
-}
+};

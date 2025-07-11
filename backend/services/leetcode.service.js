@@ -3,18 +3,22 @@ import axios from "axios";
 const fetchLeetCodeStats = async (username) => {
     const query = `
     query getUserProfile($username: String!) {
-      matchedUser(username: $username) {
+        matchedUser(username: $username) {
         username
         submitStats: submitStatsGlobal {
-          acSubmissionNum {
+            acSubmissionNum {
             difficulty
             count
-          }
+            }
+            totalSubmissionNum {
+            difficulty
+            count
+            }
         }
         userCalendar {
-          submissionCalendar
+            submissionCalendar
         }
-      }
+        }
     }
     `;
 
@@ -39,6 +43,10 @@ const fetchLeetCodeStats = async (username) => {
         if (!user) return null;
 
         const totalSolvedEstimate = user.submitStats.acSubmissionNum.find(
+            (item) => item.difficulty === "All"
+        )?.count || 0;
+
+        const totalSubmissionsEstimate = user.submitStats.totalSubmissionNum.find(
             (item) => item.difficulty === "All"
         )?.count || 0;
 
@@ -68,6 +76,7 @@ const fetchLeetCodeStats = async (username) => {
 
         return {
             totalSolved: totalSolvedEstimate,
+            totalSubmissions: totalSubmissionsEstimate,
             currentStreak: streak,
             maxDifficulty
         };

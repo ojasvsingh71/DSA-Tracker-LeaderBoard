@@ -47,7 +47,7 @@ const PublicLeaderboard = () => {
                             <th className="py-3 px-4">Handle</th>
                             <th className="py-3 px-4">Solved</th>
                             <th className="py-3 px-4">Streak</th>
-                            <th className="py-3 px-4">Max Difficulty</th>
+                            <th className="py-3 px-4">Total Attempted</th>
                         </tr>
                     </thead>
 
@@ -55,12 +55,7 @@ const PublicLeaderboard = () => {
                         {[...group.leaderboard]
                             .sort((a, b) => (b.totalSolved ?? 0) - (a.totalSolved ?? 0))
                             .map((student, idx) => {
-                                const difficultyColor =
-                                    student.maxDifficulty === "Hard"
-                                        ? "text-red-600 dark:text-red-400"
-                                        : student.maxDifficulty === "Medium"
-                                            ? "text-yellow-600 dark:text-yellow-400"
-                                            : "text-green-600 dark:text-green-300";
+                                
                                 return (
                                     <tr
                                         key={idx}
@@ -83,8 +78,8 @@ const PublicLeaderboard = () => {
                                         <td className="py-3 px-4 font-medium text-gray-800 dark:text-gray-100">
                                             {student.currentStreak ?? 0}
                                         </td>
-                                        <td className={`py-3 px-4 font-medium text-gray-800 dark:text-gray-100 font-bold ${difficultyColor}`}>
-                                            {student.maxDifficulty || "N/A"}
+                                        <td className={`py-3 px-4 font-medium text-gray-800 dark:text-gray-100 font-bold `}>
+                                            {student.totalSubmissions || "N/A"}
                                         </td>
                                     </tr>
                                 );

@@ -22,6 +22,7 @@ cron.schedule("0 */2 * * *", async () => {
                         ...entry,
                         stats: {
                             totalSolved: stats.totalSolved,
+                            totalSubmissions: stats.totalSubmissions,
                             currentStreak: stats.currentStreak,
                             maxDifficulty: stats.maxDifficulty,
                             fetchedAt: new Date()

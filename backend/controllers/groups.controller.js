@@ -45,6 +45,7 @@ const getGroup = async (req, res) => {
                 name: student.name,
                 leetcodeHandle: leetCodeData?.handle || "N/A",
                 language: leetCodeData?.language || "N/A",
+                totalSubmissions: leetCodeData?.stats?.totalSubmissions || 0,
                 totalSolved: leetCodeData?.stats?.totalSolved || 0,
                 currentStreak: leetCodeData?.stats?.currentStreak || 0,
                 maxDifficulty: leetCodeData?.stats?.maxDifficulty || "N/A"

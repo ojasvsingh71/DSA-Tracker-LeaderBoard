@@ -9,8 +9,8 @@ const addStudent = async (req, res) => {
 
         const group = await groupModel.findById(groupId);
         if (!group) {
-            return res.status(404).json({ 
-                message: "Group not found" 
+            return res.status(404).json({
+                message: "Group not found"
             });
         }
 
@@ -122,7 +122,12 @@ const editstudent = async (req, res) => {
 
 const deletestudent = async (req, res) => {
     try {
-        await studentModel.findByIdAndDelete(req.params.id);
+        const student = await studentModel.findById(req.params.id);
+        await groupModel.updateMany(
+            { _id: { $in: student.group } },
+            { $pull: { students: student._id } }
+        );
+        await studentModel.findByIdAndDelete(student._id);
         return res.sendStatus(204);
     } catch (err) {
         res.status(500).json({
@@ -167,6 +172,7 @@ const syncStudent = async (req, res) => {
             student
         });
     } catch (err) {
+        console.error(err);
         res.status(500).json({
             message: "Server error", err
         });

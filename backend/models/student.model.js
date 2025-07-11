@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const statsSchema = new mongoose.Schema({
     totalSolved: { type: Number, default: 0 },
     currentStreak: { type: Number, default: 0 },
+    totalSubmissions: { type: Number, default: 0 },
     maxDifficulty: {
         type: String,
         enum: ["Easy", "Medium", "Hard"],

@@ -166,7 +166,7 @@ const GroupDetails = () => {
                             <th className="p-3">Language</th>
                             <th className="p-3">Solved</th>
                             <th className="p-3">Streak</th>
-                            <th className="p-3">Difficulty</th>
+                            <th className="py-3 px-4">Total Attempted</th>
                             <th className="p-3">Actions</th>
                         </tr>
                     </thead>
@@ -202,13 +202,8 @@ const GroupDetails = () => {
                                 </td>
                                 <td className="p-3">{student.totalSolved}</td>
                                 <td className="p-3">{student.currentStreak}</td>
-                                <td className={`p-3 font-bold ${student.maxDifficulty === "Hard"
-                                    ? "text-red-600"
-                                    : student.maxDifficulty === "Medium"
-                                        ? "text-yellow-500"
-                                        : "text-green-600"
-                                    }`}>
-                                    {student.maxDifficulty}
+                                <td className={`p-3 font-bold `}>
+                                    {student.totalSubmissions}
                                 </td>
                                 <td className="p-3 flex items-center justify-center gap-3">
                                     {editingId === student.id ? (

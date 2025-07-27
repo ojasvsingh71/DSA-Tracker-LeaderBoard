@@ -25,6 +25,7 @@ cron.schedule("*/10 * * * *", async () => {
                             totalSubmissions: stats.totalSubmissions,
                             currentStreak: stats.currentStreak,
                             maxDifficulty: stats.maxDifficulty,
+                            contestRating: stats.contestRating,
                             fetchedAt: new Date()
                         }
                     };

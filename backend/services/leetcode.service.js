@@ -19,6 +19,13 @@ const fetchLeetCodeStats = async (username) => {
             submissionCalendar
         }
         }
+        userContestRanking(username: $username) {
+            attendedContestsCount
+            rating
+            globalRanking
+            totalParticipants
+            topPercentage
+        }
     }
     `;
 
@@ -41,6 +48,8 @@ const fetchLeetCodeStats = async (username) => {
 
         const user = res.data.data.matchedUser;
         if (!user) return null;
+
+        const ranking = res.data.data.userContestRanking;
 
         const totalSolvedEstimate = user.submitStats.acSubmissionNum.find(
             (item) => item.difficulty === "All"
@@ -78,7 +87,11 @@ const fetchLeetCodeStats = async (username) => {
             totalSolved: totalSolvedEstimate,
             totalSubmissions: totalSubmissionsEstimate,
             currentStreak: streak,
-            maxDifficulty
+            maxDifficulty,
+            contestRating: ranking?.rating || null,
+            contestCount: ranking?.attendedContestsCount || 0,
+            globalRanking: ranking?.globalRanking || null,
+            topPercentage: ranking?.topPercentage || null
         };
 
     } catch (err) {

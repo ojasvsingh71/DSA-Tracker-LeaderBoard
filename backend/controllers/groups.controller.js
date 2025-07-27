@@ -48,7 +48,8 @@ const getGroup = async (req, res) => {
                 totalSubmissions: leetCodeData?.stats?.totalSubmissions || 0,
                 totalSolved: leetCodeData?.stats?.totalSolved || 0,
                 currentStreak: leetCodeData?.stats?.currentStreak || 0,
-                maxDifficulty: leetCodeData?.stats?.maxDifficulty || "N/A"
+                maxDifficulty: leetCodeData?.stats?.maxDifficulty || "N/A",
+                contestRating: leetCodeData?.stats?.contestRating || "N/A"
             };
         });
 

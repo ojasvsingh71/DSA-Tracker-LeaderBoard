@@ -9,6 +9,10 @@ const statsSchema = new mongoose.Schema({
         enum: ["Easy", "Medium", "Hard"],
         default: "Easy"
     },
+    contestRating: {
+        type: Number,
+        default: 0
+    },
     fetchedAt: { type: Date, default: Date.now }
 }, { _id: false });
 

@@ -33,10 +33,10 @@ cron.schedule("*/10 * * * *", async () => {
                                 fetchedAt: new Date()
                             }
                         };
-                    }else if(entry?.platform==="codechef"){
+                    } else if (entry?.platform === "codechef") {
 
-                        const stats=fetchCodechefStats(entry.handle);
-                        if(!stats) return entry;
+                        const stats = await fetchCodechefStats(entry.handle);
+                        if (!stats) return entry;
 
                         console.log(`Synced: ${entry.handle}`);
                         return {

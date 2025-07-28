@@ -3,7 +3,7 @@ import studentModel from "../models/student.model.js";
 import fetchLeetCodeStats from "../services/leetcode.service.js";
 import fetchCodechefStats from "../services/codechef.service.js";
 
-cron.schedule("*/20 * * * *", async () => {
+cron.schedule("*/10 * * * *", async () => {
     console.log(" Auto Sync Started: LeetCode stats");
 
     try {

@@ -38,21 +38,48 @@ const PublicLeaderboard = () => {
 
         return (
             <span className={`font-semibold ${colorMap[level]}`}>
-                 {count}
+                {count}
             </span>
         );
     };
 
     const getRatingIcon = (rating) => {
+        if(!rating || isNaN(rating)) return ;
         if (rating > 1800) return <Star className="text-purple-600 inline w-4 h-4" />;
         if (rating > 1500) return <Star className="text-orange-500 inline w-4 h-4" />;
         return <Star className="text-gray-400 inline w-4 h-4" />;
     };
 
     const getStreakIcon = (streak) => {
+        if(!streak || isNaN(streak)) return ;
         if (streak >= 100) return <Flame className="text-orange-600 inline w-4 h-4" />;
         if (streak >= 1) return <Zap className="text-yellow-400 inline w-4 h-4" />;
         return <Zap className="text-gray-400 inline w-4 h-4" />;
+    };
+
+    const getStarIcons = (rating) => {
+        if(!rating || isNaN(rating)) return ;
+        let stars = 0;
+
+        if (rating <= 1399) {
+            stars = 1;
+        } else if (rating <= 1599) {
+            stars = 2;
+        } else if (rating <= 1799) {
+            stars = 3;
+        } else if (rating <= 1999) {
+            stars = 4;
+        } else if (rating <= 2199) {
+            stars = 5;
+        } else if (rating <= 2499) {
+            stars = 6;
+        } else {
+            stars = 7;
+        }
+
+        return Array.from({ length: stars }, (_, i) => (
+            <Star key={i} className={`text-yellow-200 inline w-4 h-4`} />
+        ));
     };
 
 
@@ -64,21 +91,20 @@ const PublicLeaderboard = () => {
             <p className="text-center text-blue-600 dark:text-blue-400 mb-6 text-sm sm:text-base">
                 📊 Public Group Rankings
             </p>
-
+            <h1 className="text-gray-500">The questions solved are based on Leetcode data :-</h1>
             <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm md:text-base whitespace-nowrap">
                     <thead className="bg-blue-50 dark:bg-gray-900 sticky top-0 z-10 text-gray-700 dark:text-gray-300 uppercase text-xs tracking-wider">
                         <tr className="text-center">
                             <th className="py-3 px-4">Rank</th>
                             <th className="py-3 px-4">Name</th>
-                            <th className="py-3 px-4">Platform</th>
-                            <th className="py-3 px-4">Handle</th>
                             <th className="text-cyan-500 py-3 px-4">Solved</th>
                             <th className="text-green-600 py-3 px-4">🟢Easy</th>
                             <th className="text-yellow-500 py-3 px-4">🟡Medium</th>
                             <th className="text-red-500 py-3 px-4">🔴Hard</th>
-                            <th className="text-purple-600 py-3 px-4">Rating</th>
                             <th className="text-orange-500 py-3 px-4">Streak</th>
+                            <th className="text-purple-600 py-3 px-4">LeetCode Rating</th>
+                            <th className="text-purple-600 py-3 px-4">Codechef Rating</th>
                             <th className="text-blue-600 py-3 px-4">Total Attempted</th>
                         </tr>
                     </thead>
@@ -98,12 +124,7 @@ const PublicLeaderboard = () => {
                                         <td className="py-3 px-4 font-medium text-gray-800 dark:text-gray-100">
                                             {student.name || "N/A"}
                                         </td>
-                                        <td className="py-3 px-4 font-medium text-gray-800 dark:text-gray-100">
-                                            LeetCode
-                                        </td>
-                                        <td className="py-3 px-4 font-medium text-gray-800 dark:text-gray-100">
-                                            {student.leetcodeHandle || "N/A"}
-                                        </td>
+
                                         <td className="py-3 px-4 font-medium text-cyan-400 dark">
                                             {student.totalSolved ?? 0}
                                         </td>
@@ -120,12 +141,16 @@ const PublicLeaderboard = () => {
                                         </td>
 
                                         <td className="py-3 px-4">
-                                            {getRatingIcon(student.contestRating)} {Math.floor(student.contestRating || 0)}
+                                            {getStreakIcon(student.currentStreak)} {student.currentStreak || 0}
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            {getRatingIcon(student.LeetcodecontestRating)} {Math.floor(student.LeetcodecontestRating || 0)}
                                         </td>
 
                                         <td className="py-3 px-4">
-                                            {getStreakIcon(student.currentStreak)} {student.currentStreak || 0}
+                                            {getStarIcons(student.CodechefcontestRating)} {Math.floor(student.CodechefcontestRating || 0)}
                                         </td>
+
 
                                         <td className={`py-3 px-4 font-medium text-gray-800 dark:text-gray-100 font-bold `}>
                                             {student.totalSubmissions || "N/A"}

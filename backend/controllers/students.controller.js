@@ -1,6 +1,7 @@
 import studentModel from "../models/student.model.js";
 import fetchLeetCodeStats from "../services/leetcode.service.js";
 import groupModel from "../models/group.model.js";
+import fetchCodechefStats from "../services/codechef.service.js";
 
 const addStudent = async (req, res) => {
     try {
@@ -27,6 +28,34 @@ const addStudent = async (req, res) => {
                 await group.save();
             }
 
+            for (let entry of platforms) {
+                const { platform, handle, language } = entry;
+
+                const exists = student.platforms.some(p => p?.platform === platform);
+                if (!exists) {
+                    let stats = {};
+
+                    if (platform === "leetcode") {
+                        stats = await fetchLeetCodeStats(handle);
+                    } else if (platform === "codechef") {
+                        stats = await fetchCodechefStats(handle);
+                    }
+
+                    student.platforms.push({
+                        platform,
+                        handle,
+                        language,
+                        stats: {
+                            ...stats,
+                            fetchedAt: new Date()
+                        }
+                    });
+                }
+            }
+
+            student.lastSynced = new Date();
+            await student.save();
+
             return res.status(200).json({
                 message: "Student already existed. Added to new group.",
                 student
@@ -41,6 +70,8 @@ const addStudent = async (req, res) => {
 
             if (platform === "leetcode") {
                 stats = await fetchLeetCodeStats(handle);
+            } else if (platform === "codechef") {
+                stats = await fetchCodechefStats(handle);
             }
 
             updatedPlatforms.push({
@@ -152,6 +183,10 @@ const syncStudent = async (req, res) => {
             let stats = {};
             if (entry.platform === "leetcode") {
                 stats = await fetchLeetCodeStats(entry.handle);
+            }
+
+            if (entry.platform === "codechef") {
+                stats = await fetchCodechefStats(entry.handle);
             }
 
             updatedPlatforms.push({

@@ -46,6 +46,9 @@ const PublicLeaderboard = () => {
                             <th className="py-3 px-4">Platform</th>
                             <th className="py-3 px-4">Handle</th>
                             <th className="py-3 px-4">Solved</th>
+                            <th className="py-3 px-4">Easy</th>
+                            <th className="py-3 px-4">Medium</th>
+                            <th className="py-3 px-4">Hard</th>
                             <th className="py-3 px-4">Rating</th>
                             <th className="py-3 px-4">Streak</th>
                             <th className="py-3 px-4">Total Attempted</th>
@@ -75,6 +78,15 @@ const PublicLeaderboard = () => {
                                         </td>
                                         <td className="py-3 px-4 font-medium text-gray-800 dark:text-gray-100">
                                             {student.totalSolved ?? 0}
+                                        </td>
+                                        <td className="py-3 px-4 font-medium text-gray-800 dark:text-gray-100">
+                                            {student.easy || 0}
+                                        </td>
+                                        <td className="py-3 px-4 font-medium text-gray-800 dark:text-gray-100">
+                                            {student.medium || 0}
+                                        </td>
+                                        <td className="py-3 px-4 font-medium text-gray-800 dark:text-gray-100">
+                                            {student.hard || 0}
                                         </td>
                                         <td className="py-3 px-4 font-medium text-gray-800 dark:text-gray-100">
                                             {Math.floor(student.contestRating) || 0 }

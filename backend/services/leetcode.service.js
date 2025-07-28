@@ -51,10 +51,6 @@ const fetchLeetCodeStats = async (username) => {
 
         const ranking = res.data.data.userContestRanking;
 
-        const totalSolvedEstimate = user.submitStats.acSubmissionNum.find(
-            (item) => item.difficulty === "All"
-        )?.count || 0;
-
         const totalSubmissionsEstimate = user.submitStats.totalSubmissionNum.find(
             (item) => item.difficulty === "All"
         )?.count || 0;
@@ -84,10 +80,13 @@ const fetchLeetCodeStats = async (username) => {
         }
 
         return {
-            totalSolved: totalSolvedEstimate,
+            totalSolved: user.submitStats.acSubmissionNum.find((item) => item.difficulty === "All")?.count || 0,
             totalSubmissions: totalSubmissionsEstimate,
             currentStreak: streak,
             maxDifficulty,
+            easy: user.submitStats.acSubmissionNum.find((item) => item.difficulty === "Easy")?.count || 0,
+            medium: user.submitStats.acSubmissionNum.find((item) => item.difficulty === "Medium")?.count || 0,
+            hard: user.submitStats.acSubmissionNum.find((item) => item.difficulty === "Hard")?.count || 0,
             contestRating: ranking?.rating || null,
             contestCount: ranking?.attendedContestsCount || 0,
             globalRanking: ranking?.globalRanking || null,

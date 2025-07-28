@@ -165,6 +165,9 @@ const GroupDetails = () => {
                             <th className="p-3">Handle</th>
                             <th className="p-3">Language</th>
                             <th className="p-3">Solved</th>
+                            <th className="p-3">Easy</th>
+                            <th className="p-3">Medium</th>
+                            <th className="p-3">Hard</th>
                             <th className="p-3">Rating</th>
                             <th className="p-3">Streak</th>
                             <th className="py-3 px-4">Total Attempted</th>
@@ -202,6 +205,9 @@ const GroupDetails = () => {
                                     }
                                 </td>
                                 <td className="p-3">{student.totalSolved}</td>
+                                <td className="p-3">{student.easy}</td>
+                                <td className="p-3">{student.medium}</td>
+                                <td className="p-3">{student.hard}</td>
                                 <td className="p-3">{Math.floor(student.contestRating) || 0}</td>
                                 <td className="p-3">{student.currentStreak}</td>
                                 <td className={`p-3 font-bold `}>

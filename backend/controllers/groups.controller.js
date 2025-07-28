@@ -49,7 +49,10 @@ const getGroup = async (req, res) => {
                 totalSolved: leetCodeData?.stats?.totalSolved || 0,
                 currentStreak: leetCodeData?.stats?.currentStreak || 0,
                 maxDifficulty: leetCodeData?.stats?.maxDifficulty || "N/A",
-                contestRating: leetCodeData?.stats?.contestRating || "N/A"
+                contestRating: leetCodeData?.stats?.contestRating || "N/A",
+                easy: leetCodeData?.stats?.easy || 0,
+                medium: leetCodeData?.stats?.medium || 0,
+                hard: leetCodeData?.stats?.hard || 0
             };
         });
 

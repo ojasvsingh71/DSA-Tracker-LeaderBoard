@@ -9,6 +9,18 @@ const statsSchema = new mongoose.Schema({
         enum: ["Easy", "Medium", "Hard"],
         default: "Easy"
     },
+    easy: {
+        type: Number,
+        default: 0
+    },
+    medium: {
+        type: Number,
+        default: 0
+    },
+    hard: {
+        type: Number,
+        default: 0
+    },
     contestRating: {
         type: Number,
         default: 0

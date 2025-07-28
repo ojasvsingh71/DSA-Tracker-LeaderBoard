@@ -22,7 +22,7 @@ const statsSchema = new mongoose.Schema({
         default: 0
     },
     contestRating: {
-        type: Number,
+        type: String,
         default: 0
     },
     fetchedAt: { type: Date, default: Date.now }

@@ -13,5 +13,5 @@ const fetchCodeforcesStats = async (username) => {
         console.error(err);
     }
 }
-fetchCodeforcesStats("ojasvsingh71")
+
 export default fetchCodeforcesStats;

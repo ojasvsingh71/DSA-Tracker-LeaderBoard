@@ -55,7 +55,7 @@ cron.schedule("*/10 * * * *", async () => {
                         return {
                             ...entry,
                             stats: {
-                                constestRating: stats.contestRating,
+                                contestRating: stats.contestRating,
                                 fetchedAt: new Date()
                             }
                         }

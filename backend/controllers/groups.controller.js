@@ -40,6 +40,7 @@ const getGroup = async (req, res) => {
         const leaderboard = group.students.map(student => {
             const leetCodeData = student.platforms.find(p => p?.platform === "leetcode");
             const codechefData = student.platforms.find(p => p?.platform === "codechef");
+            const codeforcesData = student.platforms.find(p => p?.platform === "codeforces");
 
             return {
                 id: student._id,
@@ -50,11 +51,12 @@ const getGroup = async (req, res) => {
                 totalSolved: leetCodeData?.stats?.totalSolved || 0,
                 currentStreak: leetCodeData?.stats?.currentStreak || 0,
                 maxDifficulty: leetCodeData?.stats?.maxDifficulty || "N/A",
-                LeetcodecontestRating: leetCodeData?.stats?.contestRating || "N/A",
+                LeetcodecontestRating: leetCodeData?.stats?.contestRating || 0,
                 easy: leetCodeData?.stats?.easy || 0,
                 medium: leetCodeData?.stats?.medium || 0,
                 hard: leetCodeData?.stats?.hard || 0,
-                CodechefcontestRating: codechefData?.stats?.contestRating || "N/A"
+                CodechefcontestRating: codechefData?.stats?.contestRating || 0,
+                CodeforcescontestRating: codeforcesData?.stats?.contestRating || 0
             };
         });
 

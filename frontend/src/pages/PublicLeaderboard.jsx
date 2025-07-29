@@ -44,21 +44,21 @@ const PublicLeaderboard = () => {
     };
 
     const getRatingIcon = (rating) => {
-        if(!rating || isNaN(rating)) return ;
+        if (!rating || isNaN(rating)) return;
         if (rating > 1800) return <Star className="text-purple-600 inline w-4 h-4" />;
         if (rating > 1500) return <Star className="text-orange-500 inline w-4 h-4" />;
         return <Star className="text-gray-400 inline w-4 h-4" />;
     };
 
     const getStreakIcon = (streak) => {
-        if(!streak || isNaN(streak)) return ;
+        if (!streak || isNaN(streak)) return;
         if (streak >= 100) return <Flame className="text-orange-600 inline w-4 h-4" />;
         if (streak >= 1) return <Zap className="text-yellow-400 inline w-4 h-4" />;
         return <Zap className="text-gray-400 inline w-4 h-4" />;
     };
 
     const getStarIcons = (rating) => {
-        if(!rating || isNaN(rating)) return ;
+        if (!rating || isNaN(rating)) return;
         let stars = 0;
 
         if (rating <= 1399) {
@@ -81,6 +81,31 @@ const PublicLeaderboard = () => {
             <Star key={i} className={`text-yellow-200 inline w-4 h-4`} />
         ));
     };
+
+    const getCodeforcesColor = (rating) => {
+
+        if (rating < 1200) return <span className="text-gray-400">
+            {rating}
+        </span>
+        else if (rating < 1400) return <span className="text-green-400">
+            {rating}
+        </span>
+        else if (rating < 1600) return <span className="text-cyan-400">
+            {rating}
+        </span>
+        else if (rating < 1900) return <span className="text-blue-400">
+            {rating}
+        </span>
+        else if (rating < 2200) return <span className="text-violet-400">
+            {rating}
+        </span>
+        else if (rating < 2400) return <span className="text-orange-400">
+            {rating}
+        </span>
+        else return <span className="text-red-400">
+            {rating}
+        </span>
+    }
 
 
     return (
@@ -105,6 +130,7 @@ const PublicLeaderboard = () => {
                             <th className="text-orange-500 py-3 px-4">Streak</th>
                             <th className="text-purple-600 py-3 px-4">LeetCode Rating</th>
                             <th className="text-purple-600 py-3 px-4">Codechef Rating</th>
+                            <th className="text-purple-600 py-3 px-4">Codeforces Rating</th>
                             <th className="text-blue-600 py-3 px-4">Total Attempted</th>
                         </tr>
                     </thead>
@@ -151,6 +177,9 @@ const PublicLeaderboard = () => {
                                             {getStarIcons(student.CodechefcontestRating)} {Math.floor(student.CodechefcontestRating || 0)}
                                         </td>
 
+                                        <td className="py-3 px-4">
+                                            {getCodeforcesColor(student.CodeforcescontestRating || 0)}
+                                        </td>
 
                                         <td className={`py-3 px-4 font-medium text-gray-800 dark:text-gray-100 font-bold `}>
                                             {student.totalSubmissions || "N/A"}

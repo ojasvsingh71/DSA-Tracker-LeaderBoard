@@ -137,6 +137,7 @@ const GroupDetails = () => {
                 >
                     <option value="leetcode">LeetCode</option>
                     <option value="codechef">CodeChef</option>
+                    <option value="codeforces">Codeforces</option>
                 </select>
                 <input
                     type="text"
@@ -171,6 +172,7 @@ const GroupDetails = () => {
                             <th className="p-3">Hard</th>
                             <th className="p-3">LeetCode Rating</th>
                             <th className="p-3">Codechef Rating</th>
+                            <th className="p-3">Codeforces Rating</th>
                             <th className="p-3">Streak</th>
                             <th className="py-3 px-4">Total Attempted</th>
                             <th className="p-3">Actions</th>
@@ -212,6 +214,7 @@ const GroupDetails = () => {
                                 <td className="p-3">{student.hard}</td>
                                 <td className="p-3">{Math.floor(student.LeetcodecontestRating) || 0}</td>
                                 <td className="p-3">{student.CodechefcontestRating || 0}</td>
+                                <td className="p-3">{student.CodeforcescontestRating || 0}</td>
                                 <td className="p-3">{student.currentStreak}</td>
                                 <td className={`p-3 font-bold `}>
                                     {student.totalSubmissions}

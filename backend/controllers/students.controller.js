@@ -2,6 +2,7 @@ import studentModel from "../models/student.model.js";
 import fetchLeetCodeStats from "../services/leetcode.service.js";
 import groupModel from "../models/group.model.js";
 import fetchCodechefStats from "../services/codechef.service.js";
+import fetchCodeforcesStats from "../services/codeforces.service.js";
 
 const addStudent = async (req, res) => {
     try {
@@ -39,6 +40,8 @@ const addStudent = async (req, res) => {
                         stats = await fetchLeetCodeStats(handle);
                     } else if (platform === "codechef") {
                         stats = await fetchCodechefStats(handle);
+                    } else if (platform === "codeforces") {
+                        stats = await fetchCodeforcesStats(handle);
                     }
 
                     student.platforms.push({
@@ -72,6 +75,8 @@ const addStudent = async (req, res) => {
                 stats = await fetchLeetCodeStats(handle);
             } else if (platform === "codechef") {
                 stats = await fetchCodechefStats(handle);
+            } else if (platform === "codeforces") {
+                stats = await fetchCodeforcesStats(handle);
             }
 
             updatedPlatforms.push({
@@ -183,10 +188,10 @@ const syncStudent = async (req, res) => {
             let stats = {};
             if (entry.platform === "leetcode") {
                 stats = await fetchLeetCodeStats(entry.handle);
-            }
-
-            if (entry.platform === "codechef") {
+            } else if (entry.platform === "codechef") {
                 stats = await fetchCodechefStats(entry.handle);
+            } else if (entry.platform === "codeforces") {
+                stats = await fetchCodeforcesStats(entry.handle);
             }
 
             updatedPlatforms.push({

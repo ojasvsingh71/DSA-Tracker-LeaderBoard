@@ -2,9 +2,10 @@ import cron from "node-cron";
 import studentModel from "../models/student.model.js";
 import fetchLeetCodeStats from "../services/leetcode.service.js";
 import fetchCodechefStats from "../services/codechef.service.js";
+import fetchCodeforcesStats from "../services/codeforces.service.js";
 
 cron.schedule("*/10 * * * *", async () => {
-    console.log(" Auto Sync Started: LeetCode stats");
+    console.log(" Auto Sync Started: ");
 
     try {
         const students = await studentModel.find();
@@ -17,7 +18,7 @@ cron.schedule("*/10 * * * *", async () => {
                         const stats = await fetchLeetCodeStats(entry.handle);
                         if (!stats) return entry;
 
-                        console.log(`Synced: ${entry.handle}`);
+                        console.log(`Leetcode Synced: ${entry.handle}`);
 
                         return {
                             ...entry,
@@ -38,7 +39,7 @@ cron.schedule("*/10 * * * *", async () => {
                         const stats = await fetchCodechefStats(entry.handle);
                         if (!stats) return entry;
 
-                        console.log(`Synced: ${entry.handle}`);
+                        console.log(`Codechef Synced: ${entry.handle}`);
                         return {
                             ...entry,
                             stats: {
@@ -46,6 +47,18 @@ cron.schedule("*/10 * * * *", async () => {
                                 fetchedAt: new Date()
                             }
                         };
+                    } else if (entry?.platform === "codeforces") {
+                        const stats = await fetchCodeforcesStats(entry.handle);
+                        if (!stats) return entry;
+
+                        console.log(`Codeforces Synced ${entry.handle}`);
+                        return {
+                            ...entry,
+                            stats: {
+                                constestRating: stats.contestRating,
+                                fetchedAt: new Date()
+                            }
+                        }
                     }
                 })
             );

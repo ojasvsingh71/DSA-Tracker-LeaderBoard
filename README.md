@@ -2,7 +2,9 @@
 
 A full-stack web application to track and showcase student performance in Data Structures and Algorithms across multiple platforms like LeetCode. Admins can manage student groups, sync progress, and view real-time leaderboards.
 
-<img width="1919" height="861" alt="Screenshot 2025-07-11 214820" src="https://github.com/user-attachments/assets/8cf9c320-b4cb-42d6-81c1-e311a35ee695" />
+
+<img width="1919" height="868" alt="Screenshot 2025-09-08 212343" src="https://github.com/user-attachments/assets/087e1741-40d8-4e02-8359-caeec7bcd7ec" />
+
 
 ---
 

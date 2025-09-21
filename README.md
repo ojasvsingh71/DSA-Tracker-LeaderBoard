@@ -2,7 +2,8 @@
 
 A full-stack web application to track and showcase student performance in Data Structures and Algorithms across multiple platforms like LeetCode. Admins can manage student groups, sync progress, and view real-time leaderboards.
 
-
+https://dsa-tracker-leaderboard.vercel.app/leaderboard/68713cbbdf2711a3a4b0529a
+---
 <img width="1919" height="868" alt="Screenshot 2025-09-08 212343" src="https://github.com/user-attachments/assets/087e1741-40d8-4e02-8359-caeec7bcd7ec" />
 
 

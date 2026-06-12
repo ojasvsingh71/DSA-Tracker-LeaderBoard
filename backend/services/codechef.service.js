@@ -10,7 +10,7 @@ const fetchCodechefStats = async (username) => {
         });
 
         const html = res.data;
-        const ratingRegex = /<div class="rating-number">([^<]+)<\/div>/;
+        const ratingRegex = /<div class="rating-number">\s*([0-9\?]+)/;
         const match = html.match(ratingRegex);
 
         let rating = null;

@@ -1,15 +1,18 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { ToastContext } from "../context/ToastContext";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axiosInstance";
+import { Mail, Lock, Eye, EyeOff, Award, ArrowRight, Flame, Star, Trophy, Sparkles, Terminal, Activity } from "lucide-react";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
+  const { showToast } = useContext(ToastContext);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errMsg, setErrMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -18,92 +21,197 @@ const Login = () => {
 
     try {
       const res = await api.post("/auth/admin/login", { email, password });
-
       login(res.data.user, res.data.token);
+      showToast(`Welcome back, ${res.data.user.name || "Admin"}! Access granted.`, "success");
       navigate(`/${res.data.user.adminId}/dashboard`);
     } catch (err) {
-      setErrMsg(err.response?.data?.message || "Login failed");
+      showToast(err.response?.data?.message || "Authentication rejected. Invalid credentials.", "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-slate-200 dark:from-gray-900 dark:to-gray-800 px-4 py-10">
-      <div className="bg-white dark:bg-[#1e1e2f] border border-gray-200 dark:border-gray-700 p-8 rounded-xl shadow-xl w-full max-w-md space-y-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <h2 className="text-2xl font-extrabold text-center text-gray-900 dark:text-white tracking-tight">
-            Admin Login
-          </h2>
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col lg:flex-row bg-[#030307] text-[#00ffcc] relative overflow-hidden">
+      {/* Laser grid overlays */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#06b6d4_1px,transparent_1px),linear-gradient(to_bottom,#06b6d4_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] opacity-[0.03]" />
+      
+      {/* Cyan & Magenta background laser sweeps */}
+      <div className="absolute top-10 left-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-glow" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl animate-pulse-glow" style={{ animationDelay: "2.5s" }} />
 
-          {errMsg && (
-            <div className="text-sm text-red-500 bg-red-100 dark:bg-red-900 p-2 rounded">
-              {errMsg}
+      {/* Left Panel: Cyber Command login prompt */}
+      <div className="w-full lg:w-[45%] flex items-center justify-center p-6 sm:p-12 relative z-10 border-b lg:border-b-0 lg:border-r border-[#00ffcc]/20">
+        <div className="w-full max-w-md space-y-8 bg-[#0a0a14]/80 border border-[#00ffcc]/30 p-8 rounded-2xl cyber-corners shadow-[0_0_20px_rgba(0,255,204,0.1)] relative">
+          {/* Cybernetic design line decorators */}
+          <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-[#00ffcc]/50 to-transparent" />
+          <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-[#00ffcc]" />
+          <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-[#00ffcc]" />
+
+          {/* Header branding */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-fuchsia-500 uppercase tracking-widest text-neon-magenta">
+              <Terminal className="w-4 h-4 animate-pulse" />
+              <span>// secure_auth_protocol</span>
             </div>
-          )}
+            <h2 className="text-2xl font-black text-white uppercase tracking-wider text-neon-cyan flex items-center gap-2">
+              <Activity className="w-6 h-6 text-[#00ffcc]" />
+              <span>Admin Login</span>
+            </h2>
+            <p className="text-xs text-slate-400 font-mono">
+              Provide administrator key token to establish command interface link.
+            </p>
+          </div>
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 transition disabled:opacity-60"
-          >
-            {loading ? (
-              <div className="flex items-center justify-center gap-2">
-                <svg
-                  className="animate-spin h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8z"
-                  />
-                </svg>
-                Logging in...
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email prompt */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest block">
+                [SYSTEM_ID / EMAIL]
+              </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[#00ffcc]/60">
+                  <Mail className="w-4 h-4" />
+                </span>
+                <input
+                  type="email"
+                  placeholder="name@command_node.org"
+                  className="w-full pl-10 pr-4 py-3 bg-black/60 border border-[#00ffcc]/35 text-[#00ffcc] placeholder-[#00ffcc]/30 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#00ffcc] focus:border-[#00ffcc] font-mono text-sm transition-all"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
-            ) : (
-              <>🔐 Login</>
-            )}
-          </button>
-        </form>
+            </div>
 
-        <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-          📝 Don’t have an account?{" "}
-          <Link
-            to="/register"
-            className="text-indigo-600 hover:underline dark:text-indigo-400 font-semibold"
-          >
-            Register
-          </Link>
-        </p>
+            {/* Password prompt */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest block">
+                [SECURITY_KEY / PASSWORD]
+              </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[#00ffcc]/60">
+                  <Lock className="w-4 h-4" />
+                </span>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-10 py-3 bg-black/60 border border-[#00ffcc]/35 text-[#00ffcc] placeholder-[#00ffcc]/30 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#00ffcc] focus:border-[#00ffcc] font-mono text-sm transition-all"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#00ffcc]/60 hover:text-[#00ffcc] transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-transparent hover:bg-[#00ffcc]/10 border border-[#00ffcc] hover:shadow-[0_0_15px_rgba(0,255,204,0.3)] text-white hover:text-[#00ffcc] rounded-xl font-bold uppercase tracking-widest text-xs transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            >
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>Decrypting access...</span>
+                </div>
+              ) : (
+                <>
+                  <span>Initialize Link</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="pt-4 border-t border-[#00ffcc]/10 text-center text-xs font-mono text-slate-400">
+            Access credentials not configured?{" "}
+            <Link
+              to="/register"
+              className="text-fuchsia-500 hover:text-fuchsia-400 hover:underline font-bold text-neon-magenta"
+            >
+              Register command node
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Panel: Holographic stats preview panel */}
+      <div className="hidden lg:flex lg:w-[55%] relative overflow-hidden bg-black items-center justify-center p-12">
+        <div className="absolute inset-0 bg-[#06060c] opacity-90" />
+        <div className="absolute inset-0 bg-[radial-gradient(#00ffcc_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-[0.02]" />
+
+        <div className="relative w-full max-w-lg space-y-6 z-10">
+          <div className="text-center space-y-2 mb-8">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[9px] font-bold bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20 rounded-md uppercase tracking-widest text-neon-magenta">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>[HOLOGRAPHIC DATASTREAM]</span>
+            </span>
+            <h3 className="text-2xl font-black uppercase text-white tracking-widest text-neon-cyan font-display">
+              LEADERBOARD PROTOCOL
+            </h3>
+            <p className="text-xs text-slate-400 max-w-xs mx-auto font-mono">
+              Consolidated real-time telemetry metrics compiled from external DSA database clusters.
+            </p>
+          </div>
+
+          {/* Sci-Fi Ranks Grid */}
+          <div className="space-y-4 font-mono">
+            {/* Rank 1 */}
+            <div className="bg-black/80 border border-[#00ffcc]/35 p-4 rounded-xl flex items-center justify-between shadow-[0_0_12px_rgba(0,255,204,0.05)] transform -translate-x-4 border-l-4 border-l-amber-400">
+              <div className="flex items-center gap-3">
+                <span className="text-[#00ffcc] font-bold text-sm">[01]</span>
+                <div>
+                  <h4 className="font-bold text-white text-xs uppercase tracking-wider">Ojasv Singh</h4>
+                  <span className="text-[10px] text-slate-500">// LC: ojasvsingh71</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-xs font-bold text-[#00ffcc] block text-neon-cyan">340 SOLVED</span>
+                <span className="text-[9px] text-[#00ffcc]/60 uppercase tracking-widest">Contest: 2145</span>
+              </div>
+            </div>
+
+            {/* Rank 2 */}
+            <div className="bg-black/80 border border-[#00ffcc]/35 p-4 rounded-xl flex items-center justify-between shadow-[0_0_12px_rgba(0,255,204,0.05)] border-l-4 border-l-cyan-400">
+              <div className="flex items-center gap-3">
+                <span className="text-[#00ffcc] font-bold text-sm">[02]</span>
+                <div>
+                  <h4 className="font-bold text-white text-xs uppercase tracking-wider">Aditya Vardhan</h4>
+                  <span className="text-[10px] text-slate-500">// CF: adityav</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-xs font-bold text-[#00ffcc] block text-neon-cyan">212 SOLVED</span>
+                <span className="text-[9px] text-cyan-400 uppercase tracking-widest">CF: 1540</span>
+              </div>
+            </div>
+
+            {/* Rank 3 */}
+            <div className="bg-black/80 border border-[#00ffcc]/35 p-4 rounded-xl flex items-center justify-between shadow-[0_0_12px_rgba(0,255,204,0.05)] transform translate-x-4 border-l-4 border-l-rose-500">
+              <div className="flex items-center gap-3">
+                <div className="p-1 bg-rose-500/10 text-rose-500 rounded">
+                  <Flame className="w-4 h-4 animate-pulse text-neon-magenta" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-white text-xs uppercase tracking-wider">Daily Streaks</h4>
+                  <span className="text-[10px] text-slate-500">// Consistency monitoring modules</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-xs font-bold text-rose-400 block text-neon-magenta">45 DAYS</span>
+                <span className="text-[9px] text-slate-500 uppercase tracking-widest">[ONLINE]</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

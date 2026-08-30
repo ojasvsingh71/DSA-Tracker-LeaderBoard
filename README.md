@@ -17,7 +17,9 @@
 
 ---
 
-<img width="1919" height="868" alt="DSA Tracker Leaderboard Screenshot" src="https://github.com/user-attachments/assets/087e1741-40d8-4e02-8359-caeec7bcd7ec" />
+<img width="959" height="500" alt="Screenshot 2026-08-30 151457" src="https://github.com/user-attachments/assets/a646cc3b-62e5-4f54-892e-652f5d9e3b49" />
+<img width="959" height="498" alt="Screenshot 2026-08-30 151508" src="https://github.com/user-attachments/assets/e4f2b112-3287-46ea-9148-88552419c749" />
+
 
 🔗 **Live Demo:** [View Sample Leaderboard](https://dsa-tracker-leaderboard.vercel.app/leaderboard/68713cbbdf2711a3a4b0529a)
 
